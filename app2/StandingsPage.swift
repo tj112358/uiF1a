@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import SwiftSoup
 
-struct Driver: Identifiable {
+
+
+struct DriverL: Identifiable {
     let id = UUID()
     let name: String
     let position: Int
@@ -25,38 +28,38 @@ struct Driver: Identifiable {
 
 struct StandingsPage: View {
     
-    private let drivers = [
-        Driver(name: "N. Havrda", position: 17, points: 1, headshot: "havrda_headshot", firstName: "Nicole", lastName: "Havrda", number: 2, nation: "🇨🇦", team: "Hitech TGR", support: "American Express"),
-        Driver(name: "N. Gademan", position: 6, points: 51, headshot: "gademan_headshot", firstName: "Nina", lastName: "Gademan", number: 3, nation: "🇳🇱", team: "PREMA Racing", support: "Alpine"),
-        Driver(name: "E. Felbermayr", position: 10, points: 22, headshot: "felbermayr_headshot", firstName: "Emma", lastName: "Felbermayr", number: 5, nation: "🇦🇹", team: "Rodin Motorsport", support: "Kick Sauber"),
-        Driver(name: "C. Crone", position: 18, points: 0, headshot: "crone_headshot", firstName: "Courtney", lastName: "Crone", number: 7, nation: "🇺🇸", team: "ART Grand Prix", support: "Haas"),
-        Driver(name: "A. Anagnostiadis", position: 15, points: 5, headshot: "anagnostiadis_headshot", firstName: "Aiva", lastName: "Anagnostiadis", number: 11, nation: "🇦🇺", team: "Hitech TGR", support: "TAG Heuer"),
-        Driver(name: "A. Larsen", position: 7, points: 48, headshot: "larsen_headshot", firstName: "Alba", lastName: "Larsen", number: 12, nation: "🇩🇰", team: "MP Motorsport", support: "Tommy Hilfiger"),
-        Driver(name: "C. Chambers", position: 3, points: 93, headshot: "chambers_headshot", firstName: "Chloe", lastName: "Chambers", number: 14, nation: "🇺🇸", team: "Campos Racing", support: "Red Bull Ford"),
-        Driver(name: "R. Ferreira", position: 11, points: 13, headshot: "ferreira_headshot", firstName: "Rafaela", lastName: "Ferreira", number: 18, nation: "🇧🇷", team: "Campos Racing", support: "Racing Bulls"),
-        Driver(name: "E. Lloyd", position: 4, points: 84, headshot: "lloyd_headshot", firstName: "Ella", lastName: "Lloyd", number: 20, nation: "🇬🇧", team: "Rodin Motorsport", support: "McLaren"),
-        Driver(name: "A. Palmowski", position: 5, points: 73, headshot: "palmowski_headshot", firstName: "Alisha", lastName: "Palmowski", number: 21, nation: "🇬🇧", team: "Campos Racing", support: "Red Bull Racing"),
-        Driver(name: "A. Nobels", position: 14, points: 5, headshot: "nobels_headshot", firstName: "Aurelia", lastName: "Nobels", number: 22, nation: "🇧🇷", team: "ART Grand Prix", support: "Puma"),
-        Driver(name: "J. Ciconte", position: 16, points: 4, headshot: "ciconte_headshot", firstName: "Joanne", lastName: "Ciconte", number: 25, nation: "🇦🇺", team: "MP Motorsport", support: "Wella"),
-        Driver(name: "C. Chong", position: 12, points: 12, headshot: "chong_headshot", firstName: "Chloe", lastName: "Chong", number: 27, nation: "🇬🇧", team: "Rodin Motorsport", support: "Charlotte Tilbury"),
-        Driver(name: "D. Pin", position: 1, points: 127, headshot: "pin_headshot", firstName: "Doriane", lastName: "Pin", number: 28, nation: "🇫🇷", team: "PREMA Racing", support: "Mercedes"),
-        Driver(name: "L. Block", position: 9, points: 23, headshot: "block_headshot", firstName: "Lia", lastName: "Block", number: 57, nation: "🇺🇸", team: "ART Grand Prix", support: "Williams"),
-        Driver(name: "M. Weug", position: 2, points: 107, headshot: "weug_headshot", firstName: "Maya", lastName: "Weug", number: 64, nation: "🇳🇱", team: "MP Motorsport", support: "Scuderia Ferrari"),
-        Driver(name: "T. Hausmann", position: 8, points: 46, headshot: "hausmann_headshot", firstName: "Tina", lastName: "Hausmann", number: 78, nation: "🇨🇭", team: "PREMA Racing", support: "Aston Martin"),
+    private let driversL = [
+        DriverL(name: "N. Havrda", position: 17, points: 1, headshot: "havrda_headshot", firstName: "Nicole", lastName: "Havrda", number: 2, nation: "🇨🇦", team: "Hitech TGR", support: "American Express"),
+        DriverL(name: "N. Gademan", position: 6, points: 51, headshot: "gademan_headshot", firstName: "Nina", lastName: "Gademan", number: 3, nation: "🇳🇱", team: "PREMA Racing", support: "Alpine"),
+        DriverL(name: "E. Felbermayr", position: 10, points: 22, headshot: "felbermayr_headshot", firstName: "Emma", lastName: "Felbermayr", number: 5, nation: "🇦🇹", team: "Rodin Motorsport", support: "Kick Sauber"),
+        DriverL(name: "C. Crone", position: 18, points: 0, headshot: "crone_headshot", firstName: "Courtney", lastName: "Crone", number: 7, nation: "🇺🇸", team: "ART Grand Prix", support: "Haas"),
+        DriverL(name: "A. Anagnostiadis", position: 15, points: 5, headshot: "anagnostiadis_headshot", firstName: "Aiva", lastName: "Anagnostiadis", number: 11, nation: "🇦🇺", team: "Hitech TGR", support: "TAG Heuer"),
+        DriverL(name: "A. Larsen", position: 7, points: 48, headshot: "larsen_headshot", firstName: "Alba", lastName: "Larsen", number: 12, nation: "🇩🇰", team: "MP Motorsport", support: "Tommy Hilfiger"),
+        DriverL(name: "C. Chambers", position: 3, points: 93, headshot: "chambers_headshot", firstName: "Chloe", lastName: "Chambers", number: 14, nation: "🇺🇸", team: "Campos Racing", support: "Red Bull Ford"),
+        DriverL(name: "R. Ferreira", position: 11, points: 13, headshot: "ferreira_headshot", firstName: "Rafaela", lastName: "Ferreira", number: 18, nation: "🇧🇷", team: "Campos Racing", support: "Racing Bulls"),
+        DriverL(name: "E. Lloyd", position: 4, points: 84, headshot: "lloyd_headshot", firstName: "Ella", lastName: "Lloyd", number: 20, nation: "🇬🇧", team: "Rodin Motorsport", support: "McLaren"),
+        DriverL(name: "A. Palmowski", position: 5, points: 73, headshot: "palmowski_headshot", firstName: "Alisha", lastName: "Palmowski", number: 21, nation: "🇬🇧", team: "Campos Racing", support: "Red Bull Racing"),
+        DriverL(name: "A. Nobels", position: 14, points: 5, headshot: "nobels_headshot", firstName: "Aurelia", lastName: "Nobels", number: 22, nation: "🇧🇷", team: "ART Grand Prix", support: "Puma"),
+        DriverL(name: "J. Ciconte", position: 16, points: 4, headshot: "ciconte_headshot", firstName: "Joanne", lastName: "Ciconte", number: 25, nation: "🇦🇺", team: "MP Motorsport", support: "Wella"),
+        DriverL(name: "C. Chong", position: 12, points: 12, headshot: "chong_headshot", firstName: "Chloe", lastName: "Chong", number: 27, nation: "🇬🇧", team: "Rodin Motorsport", support: "Charlotte Tilbury"),
+        DriverL(name: "D. Pin", position: 1, points: 127, headshot: "pin_headshot", firstName: "Doriane", lastName: "Pin", number: 28, nation: "🇫🇷", team: "PREMA Racing", support: "Mercedes"),
+        DriverL(name: "L. Block", position: 9, points: 23, headshot: "block_headshot", firstName: "Lia", lastName: "Block", number: 57, nation: "🇺🇸", team: "ART Grand Prix", support: "Williams"),
+        DriverL(name: "M. Weug", position: 2, points: 107, headshot: "weug_headshot", firstName: "Maya", lastName: "Weug", number: 64, nation: "🇳🇱", team: "MP Motorsport", support: "Scuderia Ferrari"),
+        DriverL(name: "T. Hausmann", position: 8, points: 46, headshot: "hausmann_headshot", firstName: "Tina", lastName: "Hausmann", number: 78, nation: "🇨🇭", team: "PREMA Racing", support: "Aston Martin"),
         
-        Driver(name: "M. Bruce", position: 23, points: 0, headshot: "bruce_headshot", firstName: "Megan", lastName: "Bruce", number: 9, nation: "🇬🇧", team: "Hitech TGR", support: "TAG Heuer"),
+        DriverL(name: "M. Bruce", position: 23, points: 0, headshot: "bruce_headshot", firstName: "Megan", lastName: "Bruce", number: 9, nation: "🇬🇧", team: "Hitech TGR", support: "TAG Heuer"),
         
-        Driver(name: "F. AlYousef (WCD)", position: 22, points: 0, headshot: "alyousef_headshot", firstName: "Farah", lastName: "AlYousef", number: 4, nation: "🇸🇦", team: "Hitech TGR", support: "Muhra"),
-        Driver(name: "M. Paatz (WCD)", position: 19, points: 0, headshot: "paatz_headshot", firstName: "Mathilda", lastName: "Paatz", number: 8, nation: "🇩🇪", team: "Hitech TGR", support: "Gatorade"),
-        Driver(name: "W. Shi (WDC)", position: 21, points: 0, headshot: "shi_headshot", firstName: "Wei", lastName: "Shi", number: 24, nation: "🇨🇳", team: "Hitech TGR", support: "Juss Sports"),
-        Driver(name: "L. Billard (WDC)", position: 24, points: 0, headshot: "billard_headshot", firstName: "Lisa", lastName: "Billard", number: 60, nation: "🇫🇷", team: "Hitech TGR", support: "Gatorade"),
-        Driver(name: "E. Kosterman (WCD)", position: 13, points: 6, headshot: "kosterman_headshot", firstName: "Esmee", lastName: "Kosterman", number: 86, nation: "🇳🇱", team: "Hitech TGR", support: "TeamViewer"),
-        Driver(name: "A. Dobson (WDC)", position: 20, points: 0, headshot: "dobson_headshot", firstName: "Ava", lastName: "Dobson", number: 90, nation: "🇺🇸", team: "Hitech TGR", support: "Morgan Stanley")
+        DriverL(name: "F. AlYousef (WCD)", position: 22, points: 0, headshot: "alyousef_headshot", firstName: "Farah", lastName: "AlYousef", number: 4, nation: "🇸🇦", team: "Hitech TGR", support: "Muhra"),
+        DriverL(name: "M. Paatz (WCD)", position: 19, points: 0, headshot: "paatz_headshot", firstName: "Mathilda", lastName: "Paatz", number: 8, nation: "🇩🇪", team: "Hitech TGR", support: "Gatorade"),
+        DriverL(name: "W. Shi (WDC)", position: 21, points: 0, headshot: "shi_headshot", firstName: "Wei", lastName: "Shi", number: 24, nation: "🇨🇳", team: "Hitech TGR", support: "Juss Sports"),
+        DriverL(name: "L. Billard (WDC)", position: 24, points: 0, headshot: "billard_headshot", firstName: "Lisa", lastName: "Billard", number: 60, nation: "🇫🇷", team: "Hitech TGR", support: "Gatorade"),
+        DriverL(name: "E. Kosterman (WCD)", position: 13, points: 6, headshot: "kosterman_headshot", firstName: "Esmee", lastName: "Kosterman", number: 86, nation: "🇳🇱", team: "Hitech TGR", support: "TeamViewer"),
+        DriverL(name: "A. Dobson (WDC)", position: 20, points: 0, headshot: "dobson_headshot", firstName: "Ava", lastName: "Dobson", number: 90, nation: "🇺🇸", team: "Hitech TGR", support: "Morgan Stanley")
     ]
     
     var body: some View {
         
-        let sortedDrivers = drivers.sorted { $0.position < $1.position}
+        let sortedDriversL = driversL.sorted { $0.position < $1.position}
         
         NavigationView{
                 ScrollView{
@@ -78,20 +81,20 @@ struct StandingsPage: View {
                             }
                             .font(.custom("ProximaNova-Bold", size: 20))
                             
-                            ForEach(sortedDrivers, id: \.id) { driver in
-                                NavigationLink (destination: DriverView(driver: driver)){
+                            ForEach(sortedDriversL, id: \.id) { driverL in
+                                NavigationLink (destination: DriverLView(driverL: driverL)){
                                     GridRow{
-                                        Text("\(driver.position)")
+                                        Text("\(driverL.position)")
                                             .padding(.leading, 5)
                                             .padding(.trailing, 20)
-                                        Image("\(driver.headshot)")
+                                        Image("\(driverL.headshot)")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 40, height: 40)
                                             .padding(.trailing, 15)
-                                        Text("\(driver.name)")
+                                        Text("\(driverL.name)")
                                             .frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\(driver.points)")
+                                        Text("\(driverL.points)")
                                     }
                                     .font(.custom("Formula1-Display-Regular", size: 14))
                                 }
@@ -108,9 +111,9 @@ struct StandingsPage: View {
     }
 
 
-struct DriverView: View {
+struct DriverLView: View {
     
-    let driver: Driver
+    let driverL: DriverL
     
     var body: some View {
         ScrollView {
@@ -119,7 +122,7 @@ struct DriverView: View {
                     ScrollViewReader { proxy in
                         ZStack{
                             GeometryReader {proxy in
-                                Image("\(driver.lastName)")
+                                Image("\(driverL.lastName)")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: proxy.size.width, height: 275) //275
@@ -127,19 +130,19 @@ struct DriverView: View {
                             VStack{
                                 Spacer()
                                 VStack{
-                                    Text("\(driver.firstName)")
+                                    Text("\(driverL.firstName)")
                                         .foregroundColor(Color(jet))
                                         .font(.custom("Formula1-Display-Regular", size: 20))
-                                    Text("\(driver.lastName)" .uppercased())
+                                    Text("\(driverL.lastName)" .uppercased())
                                         .font(.custom("Formula1-Display-Regular", size: 30))
                                         .fontWeight(.bold)
                                         .foregroundColor(Color(jet))
                                         .frame(maxWidth: .infinity)
                                     HStack {
-                                        Text("\(driver.nation)")
+                                        Text("\(driverL.nation)")
                                             .font(.custom("Formula1-Display-Regular", size: 40))
                                             .foregroundColor(Color(snow))
-                                        Text("\(driver.number)")
+                                        Text("\(driverL.number)")
                                             .font(.custom("Formula1-Display-Regular", size: 30))
                                             .foregroundColor(Color(jet))
                                     }
@@ -184,7 +187,7 @@ struct DriverView: View {
                         
                         //Bar(driver: driver)
                         
-                        Statistics(driver: driver)
+                        Statistics(driverL: driverL)
                             .id("Stats")
                         Biography()
                             .id("Bio")
@@ -200,7 +203,7 @@ struct DriverView: View {
 
 struct Bar: View {
     
-    let driver: Driver
+    let driverL: DriverL
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -230,7 +233,7 @@ struct Bar: View {
 
 struct Statistics: View {
     
-    let driver: Driver
+    let driverL: DriverL
 
     var body: some View {
         VStack {
@@ -248,11 +251,11 @@ struct Statistics: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 GridRow {
-                    Text("\(driver.position)")
+                    Text("\(driverL.position)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 10)
                         .padding(.top, 5)
-                    Text("\(driver.points)")
+                    Text("\(driverL.points)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .font(.custom("Formula1-Display-Bold", size: 20))
@@ -265,12 +268,12 @@ struct Statistics: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 GridRow {
-                    Text("\(driver.team)")
+                    Text("\(driverL.team)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 10)
                         .padding(.top, 5)
                         .padding(.bottom, 5)
-                    Text("\(driver.support)")
+                    Text("\(driverL.support)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .font(.custom("Formula1-Display-Bold", size: 15))

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		528138732E9AE8A200665E77 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 528138722E9AE8A200665E77 /* SwiftSoup */; };
 		52D8DF682E747F16006CCD4D /* Formula1-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52D8DF672E747F16006CCD4D /* Formula1-Display-Regular.ttf */; };
 		52D8DF6A2E786552006CCD4D /* Formula1-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52D8DF692E786552006CCD4D /* Formula1-Display-Bold.ttf */; };
 		52D8DF6C2E78658F006CCD4D /* Formula1-Display-Wide.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52D8DF6B2E78658F006CCD4D /* Formula1-Display-Wide.ttf */; };
@@ -74,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				528138732E9AE8A200665E77 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +139,7 @@
 			);
 			name = app2;
 			packageProductDependencies = (
+				528138722E9AE8A200665E77 /* SwiftSoup */,
 			);
 			productName = app2;
 			productReference = 52D8DF392E747335006CCD4D /* app2.app */;
@@ -220,6 +223,9 @@
 			);
 			mainGroup = 52D8DF302E747335006CCD4D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				528138712E9AE8A200665E77 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 52D8DF3A2E747335006CCD4D /* Products */;
 			projectDirPath = "";
@@ -590,6 +596,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		528138712E9AE8A200665E77 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.11.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		528138722E9AE8A200665E77 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 528138712E9AE8A200665E77 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 52D8DF312E747335006CCD4D /* Project object */;
 }

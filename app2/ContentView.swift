@@ -29,7 +29,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Schedule", systemImage: "calendar")
                 }
-            StandingsPage()
+            NewStandingsPage()
                 .tabItem {
                     Label("Standings", systemImage: "flag.pattern.checkered.2.crossed")
                 }
