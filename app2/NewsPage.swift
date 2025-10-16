@@ -1,11 +1,5 @@
 //
 //  NewsPage.swift
-//  swiftSoup test
-//
-//  Created by Thea Yocum on 10/15/25.
-//
-//
-//  NewsPage.swift
 //  app2
 //
 //  Created by Thea Yocum on 9/18/25.
@@ -14,6 +8,23 @@
 import SwiftUI
 import WebKit
 import SwiftSoup
+
+extension String {
+    func load() -> UIImage {
+        
+        do {
+            guard let url = URL(string: self) else {
+                return UIImage()
+            }
+            
+            let data: Data = try Data(contentsOf: url)
+            return UIImage(data: data) ?? UIImage()
+        } catch {
+            
+        }
+        return UIImage()
+    }
+}
 
 struct headline2: View {
     var headline: String
@@ -25,7 +36,7 @@ struct headline2: View {
         NavigationLink(destination: WebView(url: URL(string: address))) {
             VStack(alignment: .leading, spacing: 20.0){
                 HStack{
-                    Image(img)
+                    Image(uiImage: img.load())
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 90, height: 80)
@@ -49,7 +60,7 @@ struct headline2: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .cornerRadius(15)
                 .foregroundColor(Color(olive))
-                //.shadow(radius: 15)
+                //.shadow(radius: 5)
             )
             .padding(.top, 5)
             .padding(.horizontal)
@@ -66,7 +77,7 @@ struct Headliner: View {
     var body: some View{
         NavigationLink(destination: WebView(url: URL(string: address))) {
             ZStack{
-                Image(img)
+                Image(uiImage: img.load())
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity)
@@ -137,8 +148,7 @@ struct NewsPage: View {
         News(newsValue: 17),
         News(newsValue: 18),
         News(newsValue: 19),
-        News(newsValue: 20),
-        News(newsValue: 21)
+        News(newsValue: 20)
     ]
     
     var body: some View {
@@ -181,7 +191,11 @@ struct NewsPage: View {
                                 
                                 let addressNew = ("https://www.f1academy.com" + "\(try! address.attr("href"))")
                                 
-                                Headliner (headline: "\(try! headline.text())", title: "\(try! title.text())", img: "arch", address: addressNew)
+                                let image = try! document.select("div.row div.article-listing-card--item:eq(\(newsBIG.newsValue)) a div.f1-cc--image img.f1-cc--photo")
+                                
+                                let imageNew = "\(try! image.attr("data-src"))"
+                                
+                                Headliner (headline: "\(try! headline.text())", title: "\(try! title.text())", img: imageNew, address: addressNew)
                             }
                             
                             ForEach(news, id: \.id) { news in
@@ -191,8 +205,11 @@ struct NewsPage: View {
                                 
                                 let addressNew = ("https://www.f1academy.com" + "\(try! address.attr("href"))")
                                 
+                                let image = try! document.select("div.row div.article-listing-card--item:eq(\(news.newsValue)) a div.f1-cc--image img.f1-cc--photo")
                                 
-                                headline2 (headline: "\(try! headline.text())", title: "\(try! title.text())", img: "arch", address: addressNew)
+                                let imageNew = "\(try! image.attr("data-src"))"
+                                
+                                headline2 (headline: "\(try! headline.text())", title: "\(try! title.text())", img: imageNew, address: addressNew)
                             }
                         }
                     }
