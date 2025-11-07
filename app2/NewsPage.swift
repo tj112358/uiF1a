@@ -10,6 +10,7 @@ import WebKit
 import SwiftSoup
 
 
+
 struct headline2: View {
     var headline: String
     var title: String
