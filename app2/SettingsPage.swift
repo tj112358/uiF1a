@@ -26,7 +26,7 @@ struct card: View {
                     VStack(alignment: .leading){
                         Text(headline .uppercased())
                             .font(.custom("Formula1-Display-Regular", size: 16))
-                            .foregroundColor(Color(snow))
+                            .foregroundColor(.typeface)
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .multilineTextAlignment(.leading)
@@ -35,7 +35,7 @@ struct card: View {
                 .background(Rectangle()
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .cornerRadius(15)
-                    .foregroundColor(Color(olive))
+                    .foregroundColor(.card)
                             //.shadow(radius: 15)
                 )
                 .padding(.top, 5)
@@ -68,20 +68,24 @@ struct SettingsPage: View {
     
     var body: some View {
         NavigationView {
-            VStack{
-                HStack{
-                    Text("Settings")
-                        .frame(alignment: .leading)
-                        .font(.custom("Formula1-Display-Bold", size: 25))
-                        .padding(.leading, 10)
-                    Spacer()
-                }
-                .padding(10)
-                ScrollView {
-                    ForEach(info, id: \.headline) {info in
-                        card(headline: "\(info.headline)", img: "\(info.img)", route: "\(info.route)")
+            ZStack {
+                Color(.backdrop)
+                    .edgesIgnoringSafeArea(.all)
+                VStack{
+                    HStack{
+                        Text("Settings")
+                            .frame(alignment: .leading)
+                            .font(.custom("Formula1-Display-Bold", size: 25))
+                            .padding(.leading, 10)
+                        Spacer()
                     }
-                    /*card(headline: "test", img: "globe", address: "www.google.com")*/
+                    .padding(10)
+                    ScrollView {
+                        ForEach(info, id: \.headline) {info in
+                            card(headline: "\(info.headline)", img: "\(info.img)", route: "\(info.route)")
+                        }
+                        /*card(headline: "test", img: "globe", address: "www.google.com")*/
+                    }
                 }
             }
         }

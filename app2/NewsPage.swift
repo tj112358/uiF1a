@@ -30,12 +30,12 @@ struct headline2: View {
                         .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 15, bottomLeading: 15)))
                     VStack(alignment: .leading){
                         Text(title .uppercased())
-                            .foregroundColor(Color(snow))
+                            .foregroundColor(.typeface)
                             .font(.system(size: 12))
                         Text(headline)
                             .font(.custom("Formula1-Display-Bold", size: 14))
                             .fontWeight(.bold)
-                            .foregroundColor(Color(snow))
+                            .foregroundColor(.typeface)
                             .lineLimit(3)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .multilineTextAlignment(.leading)
@@ -49,7 +49,7 @@ struct headline2: View {
             .background(Rectangle()
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .cornerRadius(15)
-                .foregroundColor(Color(olive))
+                .foregroundColor(.card)
                         //.shadow(radius: 5)
             )
             .padding(.top, 5)
@@ -83,12 +83,12 @@ struct Headliner: View {
                     Spacer()
                     VStack(alignment: .leading){
                         Text(title)
-                            .foregroundColor(Color(jet))
+                            .foregroundColor(.white)
                             .font(.custom("ProximaNova-Medium", size: 15))
                         Text(headline)
                             .font(.custom("Formula1-Display-Bold", size: 22))
                             .fontWeight(.bold)
-                            .foregroundColor(Color(jet))
+                            .foregroundColor(.white)
                             .lineLimit(3)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .multilineTextAlignment(.leading)
@@ -149,17 +149,15 @@ struct NewsPage: View {
     ]
     
     var body: some View {
-        
-        let url = URL (string: "https://www.f1academy.com/Latest")!
-        let html = try? String(contentsOf: url, encoding: .utf8)
-        let document = try! SwiftSoup.parse(html ?? "")
+        //Here is where the webscraping URL and other settings were defined
         
         NavigationView {
             ZStack{
-                Color(jet) //i am the background
+                Color(.backdrop)
                     .edgesIgnoringSafeArea(.all)
                 VStack{
-                    HStack{ //i am the top bar w race countdown
+                    //Top bar with the race countdown
+                    HStack{
                         VStack{
                             Text("nextrace")
                                 .font(.custom("Formula1-Display-Regular", size: 30))
@@ -175,40 +173,21 @@ struct NewsPage: View {
                     }
                     .padding(10)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(Color(jet))
-                    //.background(Color(olive))
+                    .foregroundColor(.white)
                     .background(
-                        LinearGradient(gradient: Gradient(colors: [Color(blue), Color(purple), Color(pink)]), startPoint: .leading, endPoint: .trailing)
+                        LinearGradient(gradient: Gradient(colors: [.babyBlue, .purpleBlend, .hotrodPink]), startPoint: .leading, endPoint: .trailing)
                     )
-                    //Here is the main part of the view
+                    //Here is the main part of the homepage
                     ScrollView {
                         VStack{ //i am the main news scroll page
                             ForEach(newsBIG, id: \.id) { newsBIG in
-                                let headline = try! document.select("div.row div.article-listing-card--item:eq(\(newsBIG.newsValue)) .font-text-body")
-                                let title = try! document.select("div.row div.article-listing-card--item:eq(\(newsBIG.newsValue)) .font-tag")
-                                let address = try! document.select("div.row div.article-listing-card--item:eq(\(newsBIG.newsValue)) a")
-                                
-                                let addressNew = ("https://www.f1academy.com" + "\(try! address.attr("href"))")
-                                
-                                let image = try! document.select("div.row div.article-listing-card--item:eq(\(newsBIG.newsValue)) a div.f1-cc--image img.f1-cc--photo")
-                                
-                                let imageNew = "\(try! image.attr("data-src"))"
-                                
-                                Headliner (headline: "\(try! headline.text())", title: "\(try! title.text())", img: imageNew, address: addressNew)
+                                //here used to be the webscraping for the headliner variables
+                                Headliner (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "Image would go here", address: "Address would go here")
                             }
                             
                             ForEach(news, id: \.id) { news in
-                                let headline = try! document.select("div.row div.article-listing-card--item:eq(\(news.newsValue)) .font-text-body")
-                                let title = try! document.select("div.row div.article-listing-card--item:eq(\(news.newsValue)) .font-tag")
-                                let address = try! document.select("div.row div.article-listing-card--item:eq(\(news.newsValue)) a")
-                                
-                                let addressNew = ("https://www.f1academy.com" + "\(try! address.attr("href"))")
-                                
-                                let image = try! document.select("div.row div.article-listing-card--item:eq(\(news.newsValue)) a div.f1-cc--image img.f1-cc--photo")
-                                
-                                let imageNew = "\(try! image.attr("data-src"))"
-                                
-                                headline2 (headline: "\(try! headline.text())", title: "\(try! title.text())", img: imageNew, address: addressNew)
+                                //Here used to be the webscraping for the news variables
+                                headline2 (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "Image would go here", address: "Address would go here")
                             }
                         }
                     }

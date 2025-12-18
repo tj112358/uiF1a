@@ -45,64 +45,71 @@ struct NewStandingsPage: View {
     //TODO: async loading, load only needed when race ends
     
     var body: some View {
-        let url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver")!
-        let html = try? String(contentsOf: url, encoding: .utf8)
-        let document = try! SwiftSoup.parse(html ?? "")
+        //initializing the first round of scraping would go here
+//        let url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver")!
+//        let html = try? String(contentsOf: url, encoding: .utf8)
+//        let document = try! SwiftSoup.parse(html ?? "")
         
         NavigationView{
-            ScrollView{
-                VStack{
-                    Text("DRIVERS' STANDINGS")
-                        .foregroundStyle(Color(snow))
-                        .font(.custom("Formula1-Display-Regular", size: 26))
-                        .padding(.bottom, 10)
-                        .padding(.top, 10)
-                    
-                    Grid(alignment: .leading, horizontalSpacing: 1, verticalSpacing: 25){
-                        GridRow {
-                            Text("POS")
-                                .gridCellColumns(2)
-                            Text("DRIVER")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Text("PTS")
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                        }
-                        .font(.custom("ProximaNova-Bold", size: 20))
+            ZStack {
+                Color(.backdrop)
+                    .edgesIgnoringSafeArea(.all)
+                ScrollView{
+                    VStack{
+                        Text("DRIVERS' STANDINGS")
+                            .foregroundStyle(.typeface)
+                            .font(.custom("Formula1-Display-Regular", size: 26))
+                            .padding(.bottom, 10)
+                            .padding(.top, 10)
                         
-                        ForEach(drivers, id: \.id) { driver in
-                            let standing = try! document.select("tbody tr:eq(\(driver.personValue)) .pos")
-                            let pts = try! document.select("tbody tr:eq(\(driver.personValue)) .total-points")
-                            let person = try! document.select("tbody tr:eq(\(driver.personValue)) .visible-desktop-up")
-                            let abrv = try! document.select("tbody tr:eq(\(driver.personValue)) .visible-desktop-down")
+                        Grid(alignment: .leading, horizontalSpacing: 1, verticalSpacing: 25){
+                            GridRow {
+                                Text("POS")
+                                    .gridCellColumns(2)
+                                Text("DRIVER")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text("PTS")
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
+                            .font(.custom("ProximaNova-Bold", size: 20))
                             
-                            NavigationLink (destination: DriverView(driver: driver)){
-                                GridRow {
-                                    Text("\(try! standing.text())")
-                                        .padding(.leading, 5)
-                                        .padding(.trailing, 20)
-                                    //TODO: scrape this image??
-                                    Image("\(try! abrv.text())" + "_headshot")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 40, height: 40)
-                                        .padding(.trailing, 15)
-                                    Text("\(try! person.text())")
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    Text("\(try! pts.text())")
-                                        .frame(alignment: .trailing)
-                                    Image(systemName: "chevron.right")
-                                        .foregroundStyle(Color(.gray))
+                            ForEach(drivers, id: \.id) { driver in
+                                
+                                //initiailizing the standing, pts, person, and abrv would go here
+                                //                            let standing = try! document.select("tbody tr:eq(\(driver.personValue)) .pos")
+                                //                            let pts = try! document.select("tbody tr:eq(\(driver.personValue)) .total-points")
+                                //                            let person = try! document.select("tbody tr:eq(\(driver.personValue)) .visible-desktop-up")
+                                //                            let abrv = try! document.select("tbody tr:eq(\(driver.personValue)) .visible-desktop-down")
+                                
+                                NavigationLink (destination: DriverView(driver: driver)){
+                                    GridRow {
+                                        Text("X")
+                                            .padding(.leading, 5)
+                                            .padding(.trailing, 20)
+                                        //TODO: scrape this image??
+                                        Image("abrv" + "_headshot")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 40, height: 40)
+                                            .padding(.trailing, 15)
+                                        Text("name")
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("pts")
+                                            .frame(alignment: .trailing)
+                                        Image(systemName: "chevron.right")
+                                            .foregroundStyle(.gray)
+                                    }
+                                    .font(.custom("Formula1-Display-Regular", size: 14))
                                 }
-                                .font(.custom("Formula1-Display-Regular", size: 14))
                             }
                         }
                     }
+                    .foregroundStyle(.typeface)
+                    .font(.custom("ProximaNova-Medium", size: 15))
+                    .frame(maxWidth: .infinity)
                 }
-                .foregroundStyle(Color(snow))
-                .font(.custom("ProximaNova-Medium", size: 15))
-                .frame(maxWidth: .infinity)
+                .padding(20)
             }
-            .padding(20)
         }
     }
 }
@@ -113,78 +120,83 @@ struct DriverView: View {
     let driver: Driver
     
     var body: some View {
-        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
-        let html = try? String(contentsOf: url, encoding: .utf8)
-        let document = try! SwiftSoup.parse(html ?? "")
+        //initializing the next round of scraping here
+//        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
+//        let html = try? String(contentsOf: url, encoding: .utf8)
+//        let document = try! SwiftSoup.parse(html ?? "")
         
-        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
-        let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
-        let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
+        //initializing firstName, lastName, and number would go here
+//        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
+//        let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
+//        let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
         
-        ScrollView {
-            LazyVStack (pinnedViews: .sectionHeaders) {
-                VStack{
-                    ScrollViewReader { proxy in
-                        ZStack{
-                            GeometryReader {proxy in
-                                Image("\(try! lastName.text().replacingOccurrences(of: " ", with: ""))")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: proxy.size.width, height: 275) //275
-                            }
-                            VStack{
-                                Spacer()
-                                VStack{
-                                    Text("\(try! firstName.text())")
-                                        .foregroundColor(Color(jet))
-                                        .font(.custom("Formula1-Display-Regular", size: 20))
-                                    Text("\(try! lastName.text().replacingOccurrences(of: " ", with: ""))" .uppercased())
-                                        .font(.custom("Formula1-Display-Regular", size: 30))
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color(jet))
-                                        .frame(maxWidth: .infinity)
-                                    HStack {
-                                        Text("IM")
-                                            .font(.custom("Formula1-Display-Regular", size: 40))
-                                            .foregroundColor(Color(snow))
-                                        Text("\(try! number.text())")
-                                            .font(.custom("Formula1-Display-Regular", size: 30))
-                                            .foregroundColor(Color(jet))
-                                    }
+        ZStack {
+            Color(.backdrop)
+                .edgesIgnoringSafeArea(.all)
+            ScrollView {
+                LazyVStack (pinnedViews: .sectionHeaders) {
+                    VStack{
+                        ScrollViewReader { proxy in
+                            ZStack{
+                                GeometryReader {proxy in
+                                    Image("lastName would pull an image here")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: proxy.size.width, height: 275) //275
                                 }
-                                .padding(.top, 163)
-                                .background(
-                                    LinearGradient(gradient: Gradient(colors: [Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0)), Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0.70))]), startPoint: .top, endPoint: .bottom)
-                                )
+                                VStack{
+                                    Spacer()
+                                    VStack{
+                                        Text("first name here")
+                                            .foregroundColor(.white)
+                                            .font(.custom("Formula1-Display-Regular", size: 20))
+                                        Text("last name here" .uppercased())
+                                            .font(.custom("Formula1-Display-Regular", size: 30))
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                        HStack {
+                                            Text("IM")
+                                                .font(.custom("Formula1-Display-Regular", size: 40))
+                                                .foregroundColor(.white)
+                                            Text("##")
+                                                .font(.custom("Formula1-Display-Regular", size: 30))
+                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                    .padding(.top, 163)
+                                    .background(
+                                        LinearGradient(gradient: Gradient(colors: [Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0)), Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0.70))]), startPoint: .top, endPoint: .bottom)
+                                    )
+                                }
                             }
+                            
+                            HStack {
+                                Button("Statistics") {
+                                    proxy.scrollTo("Stats", anchor: .top)
+                                }
+                                Button("Biography") {
+                                    proxy.scrollTo("Bio", anchor: .top)
+                                }
+                                .padding(.leading, 15)
+                                .padding(.trailing, 15)
+                                Button("Results") {
+                                    proxy.scrollTo("Res", anchor: .top)
+                                }
+                                .padding(10)
+                            }
+                            .font(.custom("Formula1-Display-Regular", size: 16))
+                            .foregroundColor(.typeface)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                .card)
+                            Statistics(driver: driver)
+                                .id("Stats")
+                            Biography(driver: driver)
+                                .id("Bio")
+                            Results()
+                                .id("Res")
                         }
-                        
-                        HStack {
-                            Button("Statistics") {
-                                proxy.scrollTo("Stats", anchor: .top)
-                            }
-                            Button("Biography") {
-                                proxy.scrollTo("Bio", anchor: .top)
-                            }
-                            .padding(.leading, 15)
-                            .padding(.trailing, 15)
-                            Button("Results") {
-                                proxy.scrollTo("Res", anchor: .top)
-                            }
-                            .padding(10)
-                        }
-                        .font(.custom("Formula1-Display-Regular", size: 16))
-                        .foregroundColor(Color(snow))
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            Color(olive)
-                        )
-                        Statistics(driver: driver)
-                            .id("Stats")
-                        Biography(driver: driver)
-                            .id("Bio")
-                        Results()
-                            .id("Res")
                     }
                 }
             }
@@ -426,7 +438,7 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
         HStack {
             Link("Driver Website", destination: URL(string: "https://nicolehavrda.com/")!)
                 .padding(10)
-                .background(Color(pink))
+                .background(.hotrodPink)
                 .foregroundColor(.white)
                 .clipShape(Capsule())
             
@@ -436,7 +448,7 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 30, height: 30)
                     .padding(5)
-                    .background(Color(pink))
+                    .background(.hotrodPink)
                     .clipShape(Capsule())
             }
             
@@ -446,7 +458,7 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 35, height: 35)
                     .padding(2.5)
-                    .background(Color(pink))
+                    .background(.hotrodPink)
                     .clipShape(Capsule())
             }
         }

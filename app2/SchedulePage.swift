@@ -26,21 +26,17 @@ struct SchedulePage: View {
     
     //TODO: asynch loading of this, only needed after a race completes
     var body: some View {
-        ScrollView {
-            ForEach(race, id: \.id) { race in
-                let url = URL (string: "https://www.f1academy.com/Racing-Series/Results?raceid=" + "\(race.raceValue)")!
-                let html = try? String(contentsOf: url, encoding: .utf8)
-                let document = try! SwiftSoup.parse(html ?? "")
-                
-                let name = try! document.select("div.country-circuit")
-                let location = try! document.select("div.country-circuit-name")
-                let days = try! document.select("div.schedule span:eq(1)")
-                
-                let image = try! document.select("div.column-image img")
-                
-                let imageNew = "\(try! image.attr("data-src"))"
-                
-                InActiveEvent(date: "\(try! days.text())", location: "\(try! location.text())", raceTitle: "\(try! name.text())", img: imageNew)
+        ZStack {
+            Color(.backdrop)
+                .edgesIgnoringSafeArea(.all)
+            ScrollView {
+                ActiveEvent(roundNumber: "Round Number here", date: "date here", raceTitle: "Round Name")
+                ForEach(race, id: \.id) { race in
+                    //initializing the webscraping would go here
+                    
+                    //webscraping for the event info would go here
+                    InActiveEvent(date: "Date here", location: "Location here", raceTitle: "Round name", img: "Image would go here")
+                }
             }
         }
     }
@@ -132,7 +128,7 @@ struct ActiveEvent: View {
             .background(Rectangle()
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .cornerRadius(15)
-                .foregroundColor(Color(race))
+                .foregroundColor(.race)
             )
             Text("Race 2" .uppercased())
                 .font(.system(size: 12))
@@ -199,14 +195,14 @@ struct ActiveEvent: View {
             .background(Rectangle()
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .cornerRadius(15)
-                .foregroundColor(Color(race))
+                .foregroundColor(.race)
             )
         }
         .padding()
         .background(Rectangle()
             .frame(minWidth: 0, maxWidth: .infinity)
             .cornerRadius(15)
-            .foregroundColor(Color(olive))
+            .foregroundColor(.card)
         )
         .padding(.leading)
         .padding(.trailing)
@@ -246,7 +242,7 @@ struct InActiveEvent: View {
             .frame(minWidth: 0, maxWidth: .infinity)
             .cornerRadius(15)
             .foregroundStyle(
-                LinearGradient(gradient: Gradient(colors: [Color(olive), Color(pinky)]), startPoint: .leading, endPoint: .trailing)
+                LinearGradient(gradient: Gradient(colors: [.card, .babyPink]), startPoint: .leading, endPoint: .trailing)
             )
         )
         .padding(.leading)
