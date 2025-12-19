@@ -46,9 +46,9 @@ struct NewStandingsPage: View {
     
     var body: some View {
         //initializing the first round of scraping would go here
-//        let url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver")!
-//        let html = try? String(contentsOf: url, encoding: .utf8)
-//        let document = try! SwiftSoup.parse(html ?? "")
+        //        let url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver")!
+        //        let html = try? String(contentsOf: url, encoding: .utf8)
+        //        let document = try! SwiftSoup.parse(html ?? "")
         
         NavigationView{
             ZStack {
@@ -121,83 +121,78 @@ struct DriverView: View {
     
     var body: some View {
         //initializing the next round of scraping here
-//        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
-//        let html = try? String(contentsOf: url, encoding: .utf8)
-//        let document = try! SwiftSoup.parse(html ?? "")
+        //        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
+        //        let html = try? String(contentsOf: url, encoding: .utf8)
+        //        let document = try! SwiftSoup.parse(html ?? "")
         
         //initializing firstName, lastName, and number would go here
-//        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
-//        let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
-//        let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
+        //        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
+        //        let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
+        //        let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
         
         ZStack {
             Color(.backdrop)
                 .edgesIgnoringSafeArea(.all)
             ScrollView {
-                LazyVStack (pinnedViews: .sectionHeaders) {
-                    VStack{
-                        ScrollViewReader { proxy in
-                            ZStack{
-                                GeometryReader {proxy in
-                                    Image("lastName would pull an image here")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: proxy.size.width, height: 275) //275
-                                }
-                                VStack{
-                                    Spacer()
-                                    VStack{
-                                        Text("first name here")
-                                            .foregroundColor(.white)
-                                            .font(.custom("Formula1-Display-Regular", size: 20))
-                                        Text("last name here" .uppercased())
-                                            .font(.custom("Formula1-Display-Regular", size: 30))
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                        HStack {
-                                            Text("IM")
-                                                .font(.custom("Formula1-Display-Regular", size: 40))
-                                                .foregroundColor(.white)
-                                            Text("##")
-                                                .font(.custom("Formula1-Display-Regular", size: 30))
-                                                .foregroundColor(.white)
-                                        }
-                                    }
-                                    .padding(.top, 163)
-                                    .background(
-                                        LinearGradient(gradient: Gradient(colors: [Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0)), Color(UIColor(red: 41/255, green: 42/255, blue: 39/255, alpha: 0.70))]), startPoint: .top, endPoint: .bottom)
-                                    )
+                VStack (spacing: 0) { //<-- this (spacing: 0) makes the weird spacing go away 🫠
+                    //This is the biopic at the top and the nameing
+                    ZStack{
+                        GeometryReader { proxy in
+                            Image("lastName would pull an image here")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                            //TODO: fix magic number
+                                .frame(width: proxy.size.width, height: 275) //275
+                        }
+                        VStack{
+                            Spacer()
+                            VStack{
+                                Text("first name here")
+                                    .foregroundColor(.white)
+                                    .font(.custom("Formula1-Display-Regular", size: 20))
+                                Text("last name here" .uppercased())
+                                    .font(.custom("Formula1-Display-Regular", size: 30))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                HStack {
+                                    Text("IM")
+                                        .font(.custom("Formula1-Display-Regular", size: 40))
+                                        .foregroundColor(.white)
+                                    Text("##")
+                                        .font(.custom("Formula1-Display-Regular", size: 30))
+                                        .foregroundColor(.white)
                                 }
                             }
-                            
-                            HStack {
-                                Button("Statistics") {
-                                    proxy.scrollTo("Stats", anchor: .top)
-                                }
-                                Button("Biography") {
-                                    proxy.scrollTo("Bio", anchor: .top)
-                                }
-                                .padding(.leading, 15)
-                                .padding(.trailing, 15)
-                                Button("Results") {
-                                    proxy.scrollTo("Res", anchor: .top)
-                                }
-                                .padding(10)
-                            }
-                            .font(.custom("Formula1-Display-Regular", size: 16))
-                            .foregroundColor(.typeface)
-                            .frame(maxWidth: .infinity)
+                            .padding(.top, 163) //TODO: fix this magic number
                             .background(
-                                .card)
-                            Statistics(driver: driver)
-                                .id("Stats")
-                            Biography(driver: driver)
-                                .id("Bio")
-                            Results()
-                                .id("Res")
+                                LinearGradient(gradient: Gradient(colors: [.clear, .paleGray]), startPoint: .top, endPoint: .bottom)
+                            )
                         }
                     }
+                    
+                    HStack {
+                        Spacer()
+                        Text("Statistics")
+                        Spacer()
+                        Text("Biography")
+                        Spacer()
+                        Text("Results")
+                        Spacer()
+                    }
+                    .font(.custom("Formula1-Display-Regular", size: 16))
+                    .foregroundColor(.typeface)
+                    .frame(maxWidth: .infinity)
+                    .padding(10)
+                    .background(
+                        .card)
+                    
+                    Statistics(driver: driver)
+                        .id("Stats")
+                    Biography(driver: driver)
+                        .id("Bio")
+                    Results()
+                        .id("Res")
                 }
             }
         }
@@ -387,13 +382,13 @@ struct Biography: View {
     let driver: Driver
     
     var body: some View {
-//        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
-//        let html = try? String(contentsOf: url, encoding: .utf8)
-//        let document = try! SwiftSoup.parse(html ?? "")
-//        
-//        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
-//         let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
-//         let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
+        //        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
+        //        let html = try? String(contentsOf: url, encoding: .utf8)
+        //        let document = try! SwiftSoup.parse(html ?? "")
+        //
+        //        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
+        //         let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
+        //         let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
         
         Divider()
         Text("BIOGRAPHY")
@@ -420,7 +415,6 @@ struct Biography: View {
             .font(.custom("Formula1-Display-Bold", size: 15))
             .padding(.bottom, 5)
         }
-        Divider()
         Text(
              """
 Enamoured by the sights of Formula 1 on a family holiday, Nicole Havrda was inspired to begin her own racing journey and can’t wait to make her own mark on a Grand Prix weekend in 2025.
@@ -467,10 +461,49 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
 
 struct Results: View {
     var body: some View {
-        Text("hello, world!")
+        Divider()
+        Text("RESULTS")
+            .font(.custom("Formula1-Display-Bold", size: 20))
+            .padding(10)
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+        Grid(alignment: .leading) {
+            GridRow {
+                Text("Round")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 10)
+                    .padding(.top, 5)
+                Text("Race")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("POS")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("PTS")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 10)
+            }
+            .font(.custom("Formula1-Display-Bold", size: 15))
+            .padding(.bottom, 5)
+            //TODO: would be a for each around here, to make a row for each result
+            GridRow {
+                Text("Singapore")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 10)
+                    .padding(.top, 5)
+                Text("X")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("XX")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("XX")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 10)
+            }
+        }
     }
 }
 
-#Preview {
+#Preview("Main Page") {
     NewStandingsPage()
+}
+
+#Preview("Driver View") {
+    DriverView(driver: Driver(personValue: 9, name: ""))
 }
