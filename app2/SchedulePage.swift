@@ -44,6 +44,7 @@ struct SchedulePage: View {
 //TODO: make the current race be the activeEvent card
 //TODO: have the past races have their standings update
 //TODO: scroll to the active event
+
 struct ActiveEvent: View {
     var roundNumber: String
     var date: String
@@ -241,10 +242,9 @@ struct InActiveEvent: View {
         .background(Rectangle()
             .frame(minWidth: 0, maxWidth: .infinity)
             .cornerRadius(15)
-            .foregroundStyle(
-                LinearGradient(gradient: Gradient(colors: [.card, .babyPink]), startPoint: .leading, endPoint: .trailing)
+            .foregroundStyle(.card)
             )
-        )
+        
         .padding(.leading)
         .padding(.trailing)
         .padding(.top, 5)

@@ -207,8 +207,9 @@ struct Statistics: View {
         VStack {
             Text("2025 SEASON")
                 .font(.custom("Formula1-Display-Bold", size: 20))
-                .padding(10)
+                .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            //TODO: make the padding look more aligned, while not using specific pixel sizes
             Grid(alignment: .leading){
                 GridRow {
                     Text("Season Position")
@@ -303,7 +304,7 @@ struct Statistics: View {
             
             Text("CAREER STATS")
                 .font(.custom("Formula1-Display-Bold", size: 20))
-                .padding(10)
+                .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             Grid(alignment: .leading){
                 GridRow {
@@ -373,6 +374,7 @@ struct Statistics: View {
                         .font(.custom("Formula1-Display-Bold", size: 20))
                 }
             }
+            .padding(.bottom)
         }
     }
 }
@@ -393,8 +395,9 @@ struct Biography: View {
         Divider()
         Text("BIOGRAPHY")
             .font(.custom("Formula1-Display-Bold", size: 20))
-            .padding(10)
+            .padding()
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+        
         Grid(alignment: .leading) {
             GridRow {
                 Text("Date of Birth")
@@ -415,6 +418,7 @@ struct Biography: View {
             .font(.custom("Formula1-Display-Bold", size: 15))
             .padding(.bottom, 5)
         }
+        
         Text(
              """
 Enamoured by the sights of Formula 1 on a family holiday, Nicole Havrda was inspired to begin her own racing journey and can’t wait to make her own mark on a Grand Prix weekend in 2025.
@@ -429,6 +433,7 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
 """
         ) //bioooo
         .padding(15)
+       
         HStack {
             Link("Driver Website", destination: URL(string: "https://nicolehavrda.com/")!)
                 .padding(10)
@@ -456,6 +461,7 @@ Teaming up with F1 ACADEMY Official Partner American Express this season, she’
                     .clipShape(Capsule())
             }
         }
+        .padding(.bottom)
     }
 }
 
@@ -464,8 +470,9 @@ struct Results: View {
         Divider()
         Text("RESULTS")
             .font(.custom("Formula1-Display-Bold", size: 20))
-            .padding(10)
+            .padding()
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+        
         Grid(alignment: .leading) {
             GridRow {
                 Text("Round")

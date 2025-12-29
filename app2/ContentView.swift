@@ -53,6 +53,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
+            //TODO: add "watch" page where the races can be watched on
         }
     }
 }

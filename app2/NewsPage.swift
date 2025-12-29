@@ -182,12 +182,12 @@ struct NewsPage: View {
                         VStack{ //i am the main news scroll page
                             ForEach(newsBIG, id: \.id) { newsBIG in
                                 //here used to be the webscraping for the headliner variables
-                                Headliner (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "Image would go here", address: "Address would go here")
+                                Headliner (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "arch", address: "Address would go here")
                             }
                             
                             ForEach(news, id: \.id) { news in
                                 //Here used to be the webscraping for the news variables
-                                headline2 (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "Image would go here", address: "Address would go here")
+                                headline2 (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "arch", address: "Address would go here")
                             }
                         }
                     }
