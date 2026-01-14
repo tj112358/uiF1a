@@ -49,6 +49,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Standings", systemImage: "flag.pattern.checkered.2.crossed")
                 }
+            WatchPage()
+                .tabItem{
+                    Label("Watch", systemImage: "play")
+                }
             SettingsPage()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
