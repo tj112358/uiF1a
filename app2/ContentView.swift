@@ -7,11 +7,11 @@
 
 
 //TODO: better support of 18.6
-//TODO: add dark mode capabilities
 //TODO: need other language support
 //TODO: need support of accesibility font sizes
 //TODO: add watch page w youtube API
 //TODO: less "magic numbers": declare the scraped variables higher up and store them so they don't have to be scraped every time?
+//TODO: add more liquid glass features...
 
 import SwiftUI
 
@@ -57,7 +57,6 @@ struct ContentView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
-            //TODO: add "watch" page where the races can be watched on
         }
     }
 }
