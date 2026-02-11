@@ -58,7 +58,7 @@ struct headline2: View {
     }
 }
 
-struct Headliner: View {
+struct headliner: View {
     var headline: String
     var title: String
     var img: String
@@ -109,48 +109,39 @@ struct Headliner: View {
     }
 }
 
-struct News: Identifiable {
-    let newsValue: Int
-    let id = UUID()
+struct newsCard {
+    var headline: String
+    var title: String
+    var image: String
+    var address: String
 }
 
-struct NewsBIG: Identifiable {
-    let newsValue: Int
-    let id = UUID()
+func getNews() -> [newsCard] {
+    
+    var news = [newsCard]()
+
+        let url = URL (string: "https://www.f1academy.com/Latest")!
+        let html = try? String(contentsOf: url, encoding: .utf8)
+        let document = try! SwiftSoup.parse(html ?? "")
+
+    for i in 0...19 {
+        let headline = try! document.select("div.row div.article-listing-card--item:eq(\(i)) .font-text-body")
+        let title = try! document.select("div.row div.article-listing-card--item:eq(\(i)) .font-tag")
+        let address = try! document.select("div.row div.article-listing-card--item:eq(\(i)) a")
+        let addressNew = ("https://www.f1academy.com" + "\(try! address.attr("href"))")
+        let image = try! document.select("div.row div.article-listing-card--item:eq(\(i)) a div.f1-cc--image img.f1-cc--photo")
+        let imageNew = "\(try! image.attr("data-src"))"
+        
+        news.append(newsCard(headline: "\(try! headline.text())", title: "\(try! title.text())", image: imageNew, address: addressNew))
+    }
+    
+    return news
 }
 
 struct NewsPage: View {
-    
-    private let newsBIG = [
-        News(newsValue: 0)
-    ]
-    
-    private let news = [
-        News(newsValue: 1),
-        News(newsValue: 2),
-        News(newsValue: 3),
-        News(newsValue: 4),
-        News(newsValue: 5),
-        News(newsValue: 6),
-        News(newsValue: 7),
-        News(newsValue: 8),
-        News(newsValue: 9),
-        News(newsValue: 10),
-        News(newsValue: 11),
-        News(newsValue: 12),
-        News(newsValue: 13),
-        News(newsValue: 14),
-        News(newsValue: 15),
-        News(newsValue: 16),
-        News(newsValue: 17),
-        News(newsValue: 18),
-        News(newsValue: 19),
-        News(newsValue: 20)
-    ]
+    @State var news: [newsCard] = getNews()
     
     var body: some View {
-        //Here is where the webscraping URL and other settings were defined
-        
         NavigationView {
             ZStack{
                 Color(.backdrop)
@@ -180,14 +171,11 @@ struct NewsPage: View {
                     //Here is the main part of the homepage
                     ScrollView {
                         VStack{ //i am the main news scroll page
-                            ForEach(newsBIG, id: \.id) { newsBIG in
-                                //here used to be the webscraping for the headliner variables
-                                Headliner (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "arch", address: "Address would go here")
-                            }
                             
-                            ForEach(news, id: \.id) { news in
-                                //Here used to be the webscraping for the news variables
-                                headline2 (headline: "I am a UI test. Don't I look fabulous?", title: "I am a UI test. Don't I look fabulous?", img: "arch", address: "Address would go here")
+                            headliner (headline: news[0].headline, title: news[0].title, img: news[0].image, address: news[0].address)
+                            
+                            ForEach(1...19, id: \.self) {i in
+                                headline2 (headline: news[i].headline, title: news[i].title , img: news[i].image, address: news[i].address)
                             }
                         }
                     }
