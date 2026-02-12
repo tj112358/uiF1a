@@ -20,6 +20,7 @@ struct Driver {
     let name: String
 }
 
+//TODO: way to identify drivers by not their abbriviation? needed to be able to find drivers before they are reflected on the standings page... having a "no season yet" could also help prevent against this error, but.... Ideally, this dictionary self updates as well. Also, being unable to access drivers WCD standings, and their number changing over seasons... could be helpful to split the dictionary by year if possible, to demonstrate the driver's WCD status and accurate carno for that year? ugh and team...
 func getStandings() -> [driver]{
     
     //array of nightmares
@@ -82,16 +83,16 @@ func getStandings() -> [driver]{
             Driver(personValue: 56, name: "BRU"), //Megan Bruce
             Driver(personValue: 57, name: "BIL"), //Lisa Billard (WCD)
             Driver(personValue: 58, name: "ROB"), //Rachel Robertson
-            Driver(personValue: 59, name: ""), //Payton Westcott (WCD)
+            Driver(personValue: 59, name: "WES"), //Payton Westcott (WCD)
             Driver(personValue: 60, name: ""), //Mathilda Paatz
             Driver(personValue: 61, name: ""), //Kaylee Countryman
-            Driver(personValue: 62, name: ""), //Lisa Billard
+            Driver(personValue: 62, name: "BIL"), //Lisa Billard
             Driver(personValue: 63, name: ""), //Jade Jacquet
             Driver(personValue: 64, name: ""), //Ella Stevens
             Driver(personValue: 65, name: ""), //* Driver 17 TBA
-            Driver(personValue: 66, name: ""), //Esmee Kosterman
-            Driver(personValue: 67, name: ""), //Ava Dobson
-            Driver(personValue: 68, name: ""), //Payton Westcott
+            Driver(personValue: 66, name: "KOS"), //Esmee Kosterman
+            Driver(personValue: 67, name: "DOB"), //Ava Dobson
+            Driver(personValue: 68, name: "WES"), //Payton Westcott
             Driver(personValue: 69, name: ""), //
             Driver(personValue: 70, name: ""), //
             Driver(personValue: 71, name: "") //
@@ -156,18 +157,11 @@ struct StandingsPage: View {
 
                             NavigationLink {
                                 //This is what the Navigation link displays (the driver page)
-                                //TODO: isolate the webscraping happening here...
-                                let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers/\(standings[i].histno)/THISWEBSITEISSOSTUPID")!
-                                let html = try? String(contentsOf: url, encoding: .utf8)
-                                let document = try! SwiftSoup.parse(html ?? "")
-                                let name = "\(try! document.select("div .f1-driver-detail--name").text())"
-                                
                                 ScrollView {
-                                    Text(name)
-                                    //TODO: connect driver view
-                                    //DriverView(name: <#T##Name#>)
+                                    DriverView(driver: standings[i].histno)
+                                    Statistics(driver: standings[i].histno)
                                 }
-
+                                
                             } label: {
                                 //This is what the navigation link looks like on the standing's page
                                 GridRow {
@@ -201,271 +195,283 @@ struct StandingsPage: View {
     }
 }
 
-//TODO: must match standingsPageEvicerated to make the pages match the driver
+struct DriverView: View {
+    let driver : String
+    
+    var body: some View {
+        
+        //TODO: hollllly lag... must isolate and fix this
+        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers/\(driver)/THISWEBSITEISSOSTUPID")!
+        let html = try? String(contentsOf: url, encoding: .utf8)
+        let document = try! SwiftSoup.parse(html ?? "")
+        let name = "\(try! document.select("div .f1-driver-detail--name").text())"
+        
+        let names = name.split(separator: " ")
+        let firstName = names[0]
+        let lastName = names[1]
+        
+        let image = try! document.select("div .f1-image--wrapper img")
+        let imageNew = "\(try! image.attr("data-src"))"
+        
+        let flag = try! document.select("div .common-driver-info--flag img")
+        let flagNew = "\(try! flag.attr("data-src"))"
+        
+        let carno = "\(try! document.select("div .common-driver-info--carnumber").text())"
+        
+        ScrollView {
+            ZStack {
+                Color(.backdrop)
+                    .edgesIgnoringSafeArea(.all)
+                ScrollView {
+                    VStack (spacing: 0) {
+                        
+                        //This is the biopic at the top and the nameing
+                        ZStack{
+                            GeometryReader { proxy in
+                                Image(uiImage: imageNew.load())
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                //TODO: fix magic number
+                                    .frame(width: proxy.size.width, height: 285) //275
+                            }
+                            VStack{
+                                Spacer()
+                                VStack{
+                                    Text(firstName)
+                                        .foregroundColor(.white)
+                                        .font(.custom("Formula1-Display-Regular", size: 20))
+                                    Text(lastName .uppercased())
+                                        .font(.custom("Formula1-Display-Regular", size: 30))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                    HStack {
+                                        Image(uiImage: flagNew.load())
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 50, height: 33)
+                                        Text(carno)
+                                            .font(.custom("Formula1-Display-Regular", size: 30))
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                .padding(.top, 163) //TODO: fix this magic number
+                                .padding(.bottom, 10)
+                                .background(
+                                    LinearGradient(gradient: Gradient(colors: [.clear, .paleGray]), startPoint: .top, endPoint: .bottom)
+                                )
+                            }
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            Text("Statistics")
+                            Spacer()
+                            Text("Biography")
+                            Spacer()
+                            Text("Results")
+                            Spacer()
+                        }
+                        .font(.custom("Formula1-Display-Regular", size: 16))
+                        .foregroundColor(.typeface)
+                        .frame(maxWidth: .infinity)
+                        .padding(10)
+                        .background(
+                            .card)
+                        
+//                        Statistics(driver: driver)
+//                            .id("Stats")
+//                        Biography(driver: driver)
+//                            .id("Bio")
+//                        Results()
+//                            .id("Res")
+                    }
+                }
+            }
+        }
+    }
+}
 
-//struct DriverView: View {
-//    let driver: Driver
-//    
-//    var body: some View {
-//        //initializing the next round of scraping here
-//        //        let url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers")!
-//        //        let html = try? String(contentsOf: url, encoding: .utf8)
-//        //        let document = try! SwiftSoup.parse(html ?? "")
-//        
-//        //initializing firstName, lastName, and number would go here
-//        //        let firstName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .first-name")
-//        //        let lastName = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) div.last-name span")
-//        //        let number = try! document.select("div.row div.teams-driver-item:eq(\(driver.personValue)) .driver-carno")
-//        
-//        ZStack {
-//            Color(.backdrop)
-//                .edgesIgnoringSafeArea(.all)
-//            ScrollView {
-//                VStack (spacing: 0) { //<-- this (spacing: 0) makes the weird spacing go away 🫠
-//                    //This is the biopic at the top and the nameing
-//                    ZStack{
-//                        GeometryReader { proxy in
-//                            Image("lastName would pull an image here")
-//                                .resizable()
-//                                .aspectRatio(contentMode: .fill)
-//                            //TODO: fix magic number
-//                                .frame(width: proxy.size.width, height: 275) //275
-//                        }
-//                        VStack{
-//                            Spacer()
-//                            VStack{
-//                                Text("first name here")
-//                                    .foregroundColor(.white)
-//                                    .font(.custom("Formula1-Display-Regular", size: 20))
-//                                Text("last name here" .uppercased())
-//                                    .font(.custom("Formula1-Display-Regular", size: 30))
-//                                    .fontWeight(.bold)
-//                                    .foregroundColor(.white)
-//                                    .frame(maxWidth: .infinity)
-//                                HStack {
-//                                    Text("IM")
-//                                        .font(.custom("Formula1-Display-Regular", size: 40))
-//                                        .foregroundColor(.white)
-//                                    Text("##")
-//                                        .font(.custom("Formula1-Display-Regular", size: 30))
-//                                        .foregroundColor(.white)
-//                                }
-//                            }
-//                            .padding(.top, 163) //TODO: fix this magic number
-//                            .background(
-//                                LinearGradient(gradient: Gradient(colors: [.clear, .paleGray]), startPoint: .top, endPoint: .bottom)
-//                            )
-//                        }
-//                    }
-//                    
-//                    HStack {
-//                        Spacer()
-//                        Text("Statistics")
-//                        Spacer()
-//                        Text("Biography")
-//                        Spacer()
-//                        Text("Results")
-//                        Spacer()
-//                    }
-//                    .font(.custom("Formula1-Display-Regular", size: 16))
-//                    .foregroundColor(.typeface)
-//                    .frame(maxWidth: .infinity)
-//                    .padding(10)
-//                    .background(
-//                        .card)
-//                    
-//                    Statistics(driver: driver)
-//                        .id("Stats")
-//                    Biography(driver: driver)
-//                        .id("Bio")
-//                    Results()
-//                        .id("Res")
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//struct Statistics: View {
-//    
-//    let driver: Driver
-//    
-//    var body: some View {
-//        VStack {
-//            Text("2025 SEASON")
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                .padding()
-//                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-//            //TODO: make the padding look more aligned, while not using specific pixel sizes
-//            Grid(alignment: .leading){
-//                GridRow {
-//                    Text("Season Position")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("Season Points")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                GridRow {
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                GridRow {
-//                    Text("Team")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("Supported By")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                GridRow {
-//                    Text("TEAM")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                        .padding(.bottom, 5)
-//                    Text("TEAM")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                .font(.custom("Formula1-Display-Bold", size: 15))
-//                Divider()
-//                GridRow {
-//                    Text("Podiums")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("Poles")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                GridRow {
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                GridRow {
-//                    Text("R1 Wins")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("R2 Wins")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                GridRow {
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                GridRow {
-//                    Text("Top 10s")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("DNFs")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                GridRow {
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                        .padding(.bottom, 5)
-//                    Text("00")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                Divider()
-//            }
-//            
-//            Text("CAREER STATS")
-//                .font(.custom("Formula1-Display-Bold", size: 20))
-//                .padding()
-//                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-//            Grid(alignment: .leading){
-//                GridRow {
-//                    Text("Career Points")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("Highest Race Finish")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00 (x00)")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                        .padding(.trailing, 40)
-//                    
-//                }
-//                GridRow {
-//                    Text("Podiums")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("Poles")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("DNFs")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("Races Entered")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("Seasons Entered")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//                GridRow {
-//                    Text("Wildcard Entries")
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.leading, 10)
-//                        .padding(.top, 5)
-//                        .padding(.bottom, 5)
-//                    Text("00")
-//                        .font(.custom("Formula1-Display-Bold", size: 20))
-//                }
-//            }
-//            .padding(.bottom)
-//        }
-//    }
-//}
-//
+struct Statistics: View {
+    
+    let driver : String
+
+    var body: some View {
+        VStack {
+            Text("2025 SEASON")
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            //TODO: make the padding look more aligned, while not using specific pixel sizes
+            Grid(alignment: .leading){
+                GridRow {
+                    Text("Season Position")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("Season Points")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                GridRow {
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                GridRow {
+                    Text("Team")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("Supported By")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                GridRow {
+                    Text("TEAM")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                        .padding(.bottom, 5)
+                    Text("TEAM")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.custom("Formula1-Display-Bold", size: 15))
+                Divider()
+                GridRow {
+                    Text("Podiums")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("Poles")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                GridRow {
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                GridRow {
+                    Text("R1 Wins")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("R2 Wins")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                GridRow {
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                GridRow {
+                    Text("Top 10s")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("DNFs")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                GridRow {
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                        .padding(.bottom, 5)
+                    Text("00")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                Divider()
+            }
+            
+            Text("CAREER STATS")
+                .font(.custom("Formula1-Display-Bold", size: 20))
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            Grid(alignment: .leading){
+                GridRow {
+                    Text("Career Points")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("Highest Race Finish")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00 (x00)")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                        .padding(.trailing, 40)
+                    
+                }
+                GridRow {
+                    Text("Podiums")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("Poles")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("DNFs")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("Races Entered")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("Seasons Entered")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+                GridRow {
+                    Text("Wildcard Entries")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 5)
+                        .padding(.bottom, 5)
+                    Text("00")
+                        .font(.custom("Formula1-Display-Bold", size: 20))
+                }
+            }
+            .padding(.bottom)
+        }
+    }
+}
+
 //struct Biography: View {
 //    
 //    let driver: Driver
