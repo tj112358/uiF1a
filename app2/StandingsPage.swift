@@ -128,7 +128,24 @@ struct StandingsPage: View {
         NavigationView{
             ScrollView{
                 VStack{
+                    Text("DRIVERS' STANDINGS")
+                        .foregroundStyle(.typeface)
+                        .font(.custom("Formula1-Display-Regular", size: 26))
+                        .padding(.bottom, 10)
+                        .padding(.top, 10)
+                                    
                     Grid(alignment: .leading, horizontalSpacing: 1, verticalSpacing: 25){
+                        
+                        GridRow {
+                            Text("POS")
+                                .gridCellColumns(2)
+                            Text("DRIVER")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text("PTS")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                        .font(.custom("ProximaNova-Bold", size: 20))
+                        
                         
                         //TODO: remove the magic numbers on the for each to prevent "index out of range" crashes
                         ForEach(0...25, id: \.self) { i in
