@@ -15,8 +15,7 @@
 
 import SwiftUI
 
-//TODO: Switch this over to the prof g way of making a loading screen
-
+//pull images from web scraping
 extension String {
     func load() -> UIImage {
         
@@ -45,7 +44,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Schedule", systemImage: "calendar")
                 }
-            NewStandingsPage()
+            StandingsPage()
                 .tabItem {
                     Label("Standings", systemImage: "flag.pattern.checkered.2.crossed")
                 }

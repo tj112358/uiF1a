@@ -13,8 +13,8 @@ struct Driver: Identifiable {
     let id = UUID()
 }
 
-//TODO: turn into dictionary
-struct NewStandingsPage: View {
+struct StandingsPage: View {
+    
     private let drivers = [
         Driver(personValue: 0, name: ""),
         Driver(personValue: 1, name: ""),
@@ -508,7 +508,7 @@ struct Results: View {
 }
 
 #Preview("Main Page") {
-    NewStandingsPage()
+    StandingsPage()
 }
 
 #Preview("Driver View") {

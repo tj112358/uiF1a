@@ -10,8 +10,7 @@ import WebKit
 import SwiftSoup
 
 //TODO: add instagram moments style on homepage
-
-//TODO: asynch loading of news page
+//TODO: loading page
 
 struct headline2: View {
     var headline: String
@@ -68,12 +67,6 @@ struct headliner: View {
         //TODO: load pages and text in app rather than webkit view?
         NavigationLink(destination: WebView(url: URL(string: address))) {
             ZStack{
-                /*GeometryReader {proxy in
-                 Image(uiImage: img.load())
-                 .resizable()
-                 .aspectRatio(contentMode: .fill)
-                 .frame(width: proxy.size.width, height: 275)
-                 }*/
                 Image(uiImage: img.load())
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -82,9 +75,10 @@ struct headliner: View {
                 VStack{
                     Spacer()
                     VStack(alignment: .leading){
-                        Text(title)
+                        Text(title.uppercased())
                             .foregroundColor(.white)
                             .font(.custom("ProximaNova-Medium", size: 15))
+                            
                         Text(headline)
                             .font(.custom("Formula1-Display-Bold", size: 22))
                             .fontWeight(.bold)
@@ -147,6 +141,7 @@ struct NewsPage: View {
                 Color(.backdrop)
                     .edgesIgnoringSafeArea(.all)
                 VStack{
+                    
                     //Top bar with the race countdown
                     HStack{
                         VStack{
@@ -165,15 +160,12 @@ struct NewsPage: View {
                     .padding(10)
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
-                    .background(
-                        LinearGradient(gradient: Gradient(colors: [.babyBlue, .purpleBlend, .hotrodPink]), startPoint: .leading, endPoint: .trailing)
-                    )
-                    //Here is the main part of the homepage
+                    .background(.accent)
+                    
+                    //Scrollable part of news page
                     ScrollView {
-                        VStack{ //i am the main news scroll page
-                            
+                        VStack{
                             headliner (headline: news[0].headline, title: news[0].title, img: news[0].image, address: news[0].address)
-                            
                             ForEach(1...19, id: \.self) {i in
                                 headline2 (headline: news[i].headline, title: news[i].title , img: news[i].image, address: news[i].address)
                             }
