@@ -47,7 +47,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Schedule", systemImage: "calendar")
                 }
-            StandingsPage(queen: Queen(standing: "", pts: "", person: "", abrv: "", histno: ""))
+            StandingsPage(queen: [Queen(standing: "", pts: "", person: "", abrv: "", histno: "")])
                 .tabItem {
                     Label("Standings", systemImage: "flag.pattern.checkered.2.crossed")
                 }

@@ -126,8 +126,9 @@ func getStandings() -> [driver]{
 }
 
 struct StandingsPage: View {
+    var seasonTotalDrivers = 26
     @Environment(\.modelContext) var modelContext
-    @State var queen: Queen
+    @State var queen: [Queen]
     @State var standing = ""
     @State var pts = ""
     @State var person = ""
@@ -147,7 +148,7 @@ struct StandingsPage: View {
                     .edgesIgnoringSafeArea(.all)
                 ScrollView{
                     VStack{
-                        Button("Run newGetStandings") {
+                        Button("Try persistant storage!") {
                             
                             //array of nightmares
                             let girlypop = [
@@ -224,13 +225,14 @@ struct StandingsPage: View {
                                 Driver(personValue: 71, name: "") //
                             ]
                             
+                            var drivers = [driver]()
                             
                             let url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver?seasonId=3")!
                             let html = try? String(contentsOf: url, encoding: .utf8)
                             let document = try! SwiftSoup.parse(html ?? "")
                             
-                            //TODO: this range needs to match the number of drivers competing in the season
-                            for i in 0...25 {
+                            //TODO: no magic numbers... match range to drivers
+                            for i in 0...seasonTotalDrivers-1 {
                                 let scrapedStanding = try! document.select("tbody tr:eq(\(i)) .pos")
                                 let scrapedPts = try! document.select("tbody tr:eq(\(i)) .total-points")
                                 let scrapedPerson = try! document.select("tbody tr:eq(\(i)) .visible-desktop-up")
@@ -238,19 +240,15 @@ struct StandingsPage: View {
                                 let scrapedAbrvText = try! scrapedAbrv.text()
                                 let scrapedHistno = "\(girlypop.last {$0.name == scrapedAbrvText}?.personValue, default: "1000")"
                                 
-                                queen.standing = "\(try! scrapedStanding.text())"
-                                queen.pts = "\(try! scrapedPts.text())"
-                                queen.person = "\(try! scrapedPerson.text())"
-                                queen.abrv = "\(try! scrapedAbrv.text())"
-                                queen.histno = "\(scrapedHistno)"
-                                modelContext.insert(queen)
-                                print("\(i) queen is scraped")
-
+                                drivers.append(driver(standing: "\(try! scrapedStanding.text())", pts: "\(try! scrapedPts.text())", person: "\(try! scrapedPerson.text())", abrv: "\(try! scrapedAbrv.text())", histno: "\(scrapedHistno)"))
+                                                                
+                                queen.insert(Queen(standing: drivers[i].standing, pts: drivers[i].pts, person: drivers[i].person, abrv: drivers[i].abrv, histno: drivers[i].histno), at: i)
+                                
+                                modelContext.insert(queen[i])
                                 guard let _ = try? modelContext.save() else {
                                     print("Saving data no worky :(")
                                     return
                                 }
-                                print("\(i) queen is stored!")
                             }
                             print("data stored!!!!!")
                         }
