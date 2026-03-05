@@ -8,11 +8,13 @@
 import SwiftUI
 import SwiftData
 
+
+
 @main
 struct app2App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(queen: [Queen(standing: "", pts: "", person: "", abrv: "", histno: "", firstName: "", lastName: "", image: "", flag: "", carno: "")])
                 .modelContainer(for: Queen.self)
         }
     }
