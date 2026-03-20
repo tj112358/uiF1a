@@ -18,7 +18,8 @@ import SwiftData
 import SwiftSoup
 
 //struct for the driver array that is returned
-struct driver {
+struct driver: Identifiable {
+    let id = UUID()
     let standing: String
     let pts: String
     let person: String
@@ -30,11 +31,8 @@ struct driver {
 struct stalkerData {
     let firstName: String
     let lastName: String
-    
     let image: String
-    
     let flag: String
-    
     let carno: String
 }
 
@@ -44,27 +42,9 @@ struct Driver {
     let name: String
 }
 
-//pull images from web scraping
-extension String {
-    func load() -> UIImage {
-        
-        do {
-            guard let url = URL(string: self) else {
-                return UIImage()
-            }
-            
-            let data: Data = try Data(contentsOf: url)
-            return UIImage(data: data) ?? UIImage()
-        } catch {
-            
-        }
-        return UIImage()
-    }
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    var seasonTotalDrivers = 26
+    var seasonTotalDrivers = 18
     @State var queen: [Queen]
     @State var standing = ""
     @State var pts = ""
@@ -72,6 +52,7 @@ struct ContentView: View {
     @State var abrv = ""
     @State var histno = ""
     @AppStorage("userOnboarded", store: .standard) var userOnboarded: Bool = false
+    @State var buttonClicked = false
     
     //TODO: for when the season hasn't started, add a "no season yet" error page. OR: display last season (have a button to select which season's results are shown)
     
@@ -104,14 +85,19 @@ struct ContentView: View {
                 Color(.backdrop)
                     .edgesIgnoringSafeArea(.all)
                 VStack {
+                    if buttonClicked {
+                        ProgressView()
+                    }
                     Spacer()
                     Text("Welcome to the app! Press the button to run initial setup and enter the app")
                         .font(.custom("Formula1-Display-Bold", size: 20))
                         .foregroundColor(.typeface)
                         .multilineTextAlignment(.center)
+                    
                     Spacer()
                     Button(action : {
-                       
+                        buttonClicked.toggle()
+                        
                         //array of nightmares
                         let girlypop = [
                             Driver(personValue: 1, name: "EDG"), //Jessica Edgar
@@ -173,16 +159,16 @@ struct ContentView: View {
                             Driver(personValue: 57, name: "BIL"), //Lisa Billard (WCD)
                             Driver(personValue: 58, name: "ROB"), //Rachel Robertson
                             Driver(personValue: 59, name: "WES"), //Payton Westcott (WCD)
-                            Driver(personValue: 60, name: ""), //Mathilda Paatz
-                            Driver(personValue: 61, name: ""), //Kaylee Countryman
+                            Driver(personValue: 60, name: "PAA"), //Mathilda Paatz
+                            Driver(personValue: 61, name: "COU"), //Kaylee Countryman
                             Driver(personValue: 62, name: "BIL"), //Lisa Billard
-                            Driver(personValue: 63, name: ""), //Jade Jacquet
-                            Driver(personValue: 64, name: ""), //Ella Stevens
+                            Driver(personValue: 63, name: ""), //Jade Jacquet JAC
+                            Driver(personValue: 64, name: "STE"), //Ella Stevens
                             Driver(personValue: 65, name: ""), //* Driver 17 TBA
                             Driver(personValue: 66, name: "KOS"), //Esmee Kosterman
                             Driver(personValue: 67, name: "DOB"), //Ava Dobson
                             Driver(personValue: 68, name: "WES"), //Payton Westcott
-                            Driver(personValue: 69, name: ""), //
+                            Driver(personValue: 69, name: "GRA"), //Natalia Granada
                             Driver(personValue: 70, name: ""), //
                             Driver(personValue: 71, name: "") //
                         ]
@@ -191,7 +177,7 @@ struct ContentView: View {
                         var stalkerDataSet = [stalkerData]()
                         
                         for i in 0...seasonTotalDrivers-1 {
-                            var url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver?seasonId=3")!
+                            var url = URL (string: "https://www.f1academy.com/Racing-Series/Standings/Driver?seasonId=4")!
                             var html = try? String(contentsOf: url, encoding: .utf8)
                             var document = try! SwiftSoup.parse(html ?? "")
                             
@@ -204,27 +190,40 @@ struct ContentView: View {
                             
                             drivers.append(driver(standing: "\(try! scrapedStanding.text())", pts: "\(try! scrapedPts.text())", person: "\(try! scrapedPerson.text())", abrv: "\(try! scrapedAbrv.text())", histno: "\(scrapedHistno)"))
                             
-                            url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers/\(scrapedHistno)/THISWEBSITEISSOSTUPID")!
-                            html = try? String(contentsOf: url, encoding: .utf8)
-                            document = try! SwiftSoup.parse(html ?? "")
-                            
-                            let name = "\(try! document.select("div .f1-driver-detail--name").text())"
-                            
-                            let names = name.split(separator: " ")
-                            let firstName = names[0]
-                            let lastName = names[1]
-                            
-                            let image = try! document.select("div .f1-image--wrapper img")
-                            let imageNew = "\(try! image.attr("data-src"))"
-                            
-                            let flag = try! document.select("div .common-driver-info--flag img")
-                            let flagNew = "\(try! flag.attr("data-src"))"
-                            
-                            let carno = "\(try! document.select("div .common-driver-info--carnumber").text())"
-                                                        
-                            stalkerDataSet.append(stalkerData(firstName: String(firstName), lastName: String(lastName), image: imageNew, flag: flagNew, carno: carno))
+                            //handle if the abrv wasn't found in the array, and the default histno = 1000 was used (otherwise, will recieve fatal error: index out of range when trying to scrape values from a non-existant driver page)
+                            //TODO: handle if the most recent abrv isn't found, but a diff driver has an old abrv matches (eg: if "histno = 69; abrv: GRA; driver: Natalia Granada" isn't updated, scrapedHistno will pull "histno = 30; abrv: GRA; driver: Chloe Grant"
+                            if scrapedHistno == "1000" {
+                                let firstName = "Uh Oh.."
+                                let lastName = "No Data Found"
+                                let imageNew = ""
+                                let flagNew = ""
+                                let carno = "##"
+                                
+                                stalkerDataSet.append(stalkerData(firstName: String(firstName), lastName: String(lastName), image: imageNew, flag: flagNew, carno: carno))
+                            } else {
+                                url = URL (string: "https://www.f1academy.com/Racing-Series/Drivers/\(scrapedHistno)/THISWEBSITEISSOSTUPID")!
+                                html = try? String(contentsOf: url, encoding: .utf8)
+                                document = try! SwiftSoup.parse(html ?? "")
+                                
+                                let name = "\(try! document.select("div .f1-driver-detail--name").text())"
+                                
+                                let names = name.split(separator: " ")
+                                let firstName = names[0]
+                                let lastName = names[1]
+                                
+                                let image = try! document.select("div .f1-image--wrapper img")
+                                let imageNew = "\(try! image.attr("data-src"))"
+                                
+                                let flag = try! document.select("div .common-driver-info--flag img")
+                                let flagNew = "\(try! flag.attr("data-src"))"
+                                
+                                let carno = "\(try! document.select("div .common-driver-info--carnumber").text())"
+                                
+                                stalkerDataSet.append(stalkerData(firstName: String(firstName), lastName: String(lastName), image: imageNew, flag: flagNew, carno: carno))
+                            }
                             
                             queen.insert(Queen(standing: drivers[i].standing, pts: drivers[i].pts, person: drivers[i].person, abrv: drivers[i].abrv, histno: drivers[i].histno, firstName: stalkerDataSet[i].firstName, lastName: stalkerDataSet[i].lastName, image: stalkerDataSet[i].image, flag: stalkerDataSet[i].flag, carno: stalkerDataSet[i].carno), at: i)
+                            
                             
                             modelContext.insert(queen[i])
                             guard let _ = try? modelContext.save() else {

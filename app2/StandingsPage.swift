@@ -122,11 +122,15 @@ struct DriverView: View {
                         //This is the biopic at the top and the nameing
                         ZStack{
                             GeometryReader { proxy in
-                                Image(uiImage: imageNew.load())
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                AsyncImage(url: URL(string: imageNew)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                } placeholder: {
+                                    ProgressView()
+                                }
                                 //TODO: fix magic number
-                                    .frame(width: proxy.size.width, height: 285) //275
+                                .frame(width: proxy.size.width, height: 285) //275
                             }
                             VStack{
                                 Spacer()
@@ -140,10 +144,15 @@ struct DriverView: View {
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
                                     HStack {
-                                        Image(uiImage: flagNew.load())
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 50, height: 33)
+                                        AsyncImage(url: URL(string: flagNew)) { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 50, height: 33)
+                                        
                                         Text(carno)
                                             .font(.custom("Formula1-Display-Regular", size: 30))
                                             .foregroundColor(.white)

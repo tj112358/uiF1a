@@ -232,11 +232,15 @@ struct InActiveEvent: View {
                     .font(.system(size: 16))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            Image(uiImage: img.load())
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 90, height: 90)
-                .padding(.trailing, 30)
+            AsyncImage(url: URL(string: img)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 90, height: 90)
+            .padding(.trailing, 30)
         }
         .padding()
         .background(Rectangle()

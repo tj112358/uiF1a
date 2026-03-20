@@ -22,11 +22,16 @@ struct headline2: View {
         NavigationLink(destination: WebView(url: URL(string: address))) {
             VStack(alignment: .leading, spacing: 20.0){
                 HStack{
-                    Image(uiImage: img.load())
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 100, height: 90)
-                        .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 15, bottomLeading: 15)))
+                    AsyncImage(url: URL(string: img)) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .frame(width: 100, height: 90)
+                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 15, bottomLeading: 15)))
+                    
                     VStack(alignment: .leading){
                         Text(title .uppercased())
                             .foregroundColor(.typeface)
@@ -67,11 +72,16 @@ struct headliner: View {
         //TODO: load pages and text in app rather than webkit view?
         NavigationLink(destination: WebView(url: URL(string: address))) {
             ZStack{
-                Image(uiImage: img.load())
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .cornerRadius(15)
+                AsyncImage(url: URL(string: img)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(maxWidth: .infinity)
+                .cornerRadius(15)
+                
                 VStack{
                     Spacer()
                     VStack(alignment: .leading){
@@ -113,7 +123,7 @@ struct newsCard {
 func getNews() -> [newsCard] {
     
     var news = [newsCard]()
-
+//MARK: here's the synch loading it doesn't like
         let url = URL (string: "https://www.f1academy.com/Latest")!
         let html = try? String(contentsOf: url, encoding: .utf8)
         let document = try! SwiftSoup.parse(html ?? "")
