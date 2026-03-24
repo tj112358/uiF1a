@@ -49,7 +49,7 @@ struct StandingsPage: View {
                                 let standing = queen.standing
                                 let pts = queen.pts
                                 let person = queen.person
-                                let abrv = queen.abrv
+                                let img = queen.image
                                 
                                 NavigationLink {
                                     //This is what the Navigation link displays (the driver page)
@@ -66,14 +66,20 @@ struct StandingsPage: View {
                                     //This is what the navigation link looks like on the standing's page
                                     GridRow {
                                         Text(standing)
+                                            .frame(minWidth: 30, alignment: .leading)
                                             .padding(.leading, 5)
-                                            .padding(.trailing, 20)
-                                        //TODO: scrape headshot image? or create a default value if needed
-                                        Image(abrv + "_headshot")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 40, height: 40)
-                                            .padding(.trailing, 15)
+                                        
+                                        AsyncImage(url: URL(string: img)) { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                        .padding(.trailing, 15)
+
                                         Text(person)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                         Text(pts)

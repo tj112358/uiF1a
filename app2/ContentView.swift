@@ -162,7 +162,7 @@ struct ContentView: View {
                             Driver(personValue: 60, name: "PAA"), //Mathilda Paatz
                             Driver(personValue: 61, name: "COU"), //Kaylee Countryman
                             Driver(personValue: 62, name: "BIL"), //Lisa Billard
-                            Driver(personValue: 63, name: ""), //Jade Jacquet JAC
+                            Driver(personValue: 63, name: "JAC"), //Jade Jacquet
                             Driver(personValue: 64, name: "STE"), //Ella Stevens
                             Driver(personValue: 65, name: ""), //* Driver 17 TBA
                             Driver(personValue: 66, name: "KOS"), //Esmee Kosterman
